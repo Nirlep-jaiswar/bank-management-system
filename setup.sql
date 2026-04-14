@@ -78,3 +78,19 @@ INSERT INTO Admins (FirstName, LastName, Email, Password, Role) VALUES
 ('Tanay', 'Tiwari', 'tanay@nexusbank.com', 'password123', 'Teller'),
 ('Durgesh', 'Nandan', 'durgesh@nexusbank.com', 'password123', 'Teller'),
 ('Ayushh', 'Singh', 'ayushh@nexusbank.com', 'password123', 'Teller');
+
+-- Insert dummy Customers
+INSERT INTO Customers (FirstName, LastName, Email, Phone, Address, DateOfBirth) VALUES 
+('John', 'Doe', 'john.doe@example.com', '555-0101', '123 Maple Street, NY', '1985-04-12'),
+('Jane', 'Smith', 'jane.smith@example.com', '555-0102', '456 Oak Avenue, CA', '1990-08-25'),
+('Michael', 'Johnson', 'michael.j@example.com', '555-0103', '789 Pine Road, TX', '1978-11-05'),
+('Sarah', 'Williams', 'sarah.w@example.com', '555-0104', '321 Elm Street, FL', '1995-02-14'),
+('David', 'Miller', 'david.m@example.com', '555-0105', '654 Birch Lane, WA', '1982-09-30');
+
+-- Insert dummy Accounts
+INSERT INTO Accounts (CustomerID, BranchID, AccountType, Balance, Status) VALUES 
+(1, 1, 'Savings', 5500.00, 'Active'),
+(2, 1, 'Current', 12500.50, 'Active'),
+(3, 2, 'Savings', 8400.00, 'Active'),
+(4, 2, 'Salary', 9200.75, 'Active'),
+(5, 1, 'Savings', 1500.00, 'Active');
