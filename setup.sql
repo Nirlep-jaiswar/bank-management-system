@@ -46,7 +46,7 @@ CREATE TABLE Accounts (
 CREATE TABLE Transactions (
   TransactionID INT AUTO_INCREMENT PRIMARY KEY,
   AccountID BIGINT,
-  TransactionType ENUM('Deposit', 'Withdrawal', 'Transfer') NOT NULL,
+  TransactionType ENUM('Deposit', 'Withdrawal', 'Transfer', 'Loan Repayment') NOT NULL,
   Amount DECIMAL(15,2) NOT NULL,
   TransactionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   Description VARCHAR(255),
