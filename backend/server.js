@@ -69,7 +69,7 @@ app.post('/api/accounts', async (req, res) => {
         const { CustomerID, AccountType, Balance, AdminID } = req.body;
         const cid = CustomerID || 1;
         const [result] = await conn.query(
-            'INSERT INTO Accounts (CustomerID, BranchID, AccountType, Balance, Status) VALUES (?, 1, ?, ?, "Active")',
+            'INSERT INTO Accounts (CustomerID, BranchID, AccountType, Balance, Status) VALUES (?, 1, ?, ?, \'Active\')',
             [cid, AccountType || 'Savings', Balance || 0]
         );
         await logAdminAction(conn, AdminID, 'Create Account', `Created ${AccountType} account for Customer ${cid}`);
@@ -268,7 +268,7 @@ app.post('/api/admin/return', async (req, res) => {
         }
 
         await conn.query('UPDATE Admins SET AllocatedFunds = AllocatedFunds - ? WHERE AdminID = ?', [Amount, AdminID]);
-        await conn.query('UPDATE Admins SET AllocatedFunds = AllocatedFunds + ? WHERE Role = "Super Admin" LIMIT 1', [Amount]);
+        await conn.query('UPDATE Admins SET AllocatedFunds = AllocatedFunds + ? WHERE Role = \'Super Admin\' LIMIT 1', [Amount]);
         
         await logAdminAction(conn, AdminID, 'Return Funds', `Returned $${Amount} to Main Vault at end of day.`);
         await conn.commit();
@@ -351,7 +351,7 @@ app.post('/api/transactions', async (req, res) => {
 
         let isLoanRepayment = false;
         if (TransactionType === 'Loan Repayment') {
-            const [loans] = await conn.query('SELECT LoanID, PrincipalAmount, Status FROM Loans WHERE LoanID = ? AND Status = "Approved"', [TargetAccountID]);
+            const [loans] = await conn.query('SELECT LoanID, PrincipalAmount, Status FROM Loans WHERE LoanID = ? AND Status = \'Approved\'', [TargetAccountID]);
             if (loans.length === 0) {
                  await conn.rollback();
                  return res.status(404).json({ error: 'Active loan not found. Please check Loan ID.' });
@@ -392,7 +392,7 @@ app.post('/api/transactions', async (req, res) => {
         
         if (isLoanRepayment) {
             await conn.query('UPDATE Loans SET PrincipalAmount = PrincipalAmount - ? WHERE LoanID = ?', [Amount, TargetAccountID]);
-            await conn.query('UPDATE Loans SET Status = "Closed" WHERE LoanID = ? AND PrincipalAmount <= 0', [TargetAccountID]);
+            await conn.query('UPDATE Loans SET Status = \'Closed\' WHERE LoanID = ? AND PrincipalAmount <= 0', [TargetAccountID]);
         }
         
         // Process target receiver if it's a Transfer
@@ -446,7 +446,7 @@ app.put('/api/loans/:id/status', async (req, res) => {
             const [loans] = await conn.query('SELECT CustomerID, PrincipalAmount FROM Loans WHERE LoanID = ?', [loanId]);
             if (loans.length > 0) {
                 const { CustomerID, PrincipalAmount } = loans[0];
-                const [accounts] = await conn.query('SELECT AccountID FROM Accounts WHERE CustomerID = ? AND Status = "Active" LIMIT 1', [CustomerID]);
+                const [accounts] = await conn.query('SELECT AccountID FROM Accounts WHERE CustomerID = ? AND Status = \'Active\' LIMIT 1', [CustomerID]);
                 if (accounts.length > 0) {
                     const accountId = accounts[0].AccountID;
                     await conn.query('UPDATE Accounts SET Balance = Balance + ? WHERE AccountID = ?', [PrincipalAmount, accountId]);
@@ -480,7 +480,7 @@ app.post('/api/loans/:id/add-interest', async (req, res) => {
         const { adminId } = req.body;
         const loanId = req.params.id;
         
-        const [loans] = await conn.query('SELECT PrincipalAmount, InterestRate FROM Loans WHERE LoanID = ? AND Status = "Approved"', [loanId]);
+        const [loans] = await conn.query('SELECT PrincipalAmount, InterestRate FROM Loans WHERE LoanID = ? AND Status = \'Approved\'', [loanId]);
         if (loans.length === 0) {
             await conn.rollback();
             return res.status(404).json({ error: 'Active loan not found.' });
