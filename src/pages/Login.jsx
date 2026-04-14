@@ -28,7 +28,17 @@ export default function Login() {
         }
       }
     } catch(err) {
-      setError(err.response?.data?.error || 'Failed to connect to the server.');
+      let errorMsg = 'Failed to connect to the server.';
+      if (err.response && err.response.data) {
+        if (typeof err.response.data.error === 'string') {
+          errorMsg = err.response.data.error;
+        } else if (err.response.data.error && err.response.data.error.message) {
+          errorMsg = err.response.data.error.message;
+        } else if (err.response.data.message) {
+          errorMsg = err.response.data.message;
+        }
+      }
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
