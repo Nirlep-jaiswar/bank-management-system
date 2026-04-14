@@ -73,11 +73,11 @@ INSERT INTO Branches (BranchName, Location, Contact) VALUES
 
 CREATE TABLE Admins ( AdminID INT AUTO_INCREMENT PRIMARY KEY, FirstName VARCHAR(100) NOT NULL, LastName VARCHAR(100) NOT NULL, Email VARCHAR(100) UNIQUE NOT NULL, Password VARCHAR(100) NOT NULL, AssignedBranch INT, Role ENUM('Teller', 'Super Admin') DEFAULT 'Teller', AllocatedFunds DECIMAL(15,2) DEFAULT 0.00 );
 CREATE TABLE AdminAuditLogs ( LogID INT AUTO_INCREMENT PRIMARY KEY, AdminID INT, ActionType VARCHAR(100) NOT NULL, Description TEXT, Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (AdminID) REFERENCES Admins(AdminID) );
-INSERT INTO Admins (FirstName, LastName, Email, Password, Role) VALUES 
-('Nirlep', 'Jaiswar', 'nirlep@nexusbank.com', 'admin123', 'Super Admin'),
-('Tanay', 'Tiwari', 'tanay@nexusbank.com', 'password123', 'Teller'),
-('Durgesh', 'Nandan', 'durgesh@nexusbank.com', 'password123', 'Teller'),
-('Ayushh', 'Singh', 'ayushh@nexusbank.com', 'password123', 'Teller');
+INSERT INTO Admins (FirstName, LastName, Email, Password, Role, AllocatedFunds) VALUES 
+('Nirlep', 'Jaiswar', 'nirlep@nexusbank.com', 'admin123', 'Super Admin', 9999999999.00),
+('Tanay', 'Tiwari', 'tanay@nexusbank.com', 'password123', 'Teller', 0.00),
+('Durgesh', 'Nandan', 'durgesh@nexusbank.com', 'password123', 'Teller', 0.00),
+('Ayushh', 'Singh', 'ayushh@nexusbank.com', 'password123', 'Teller', 0.00);
 
 -- Insert dummy Customers
 INSERT INTO Customers (FirstName, LastName, Email, Phone, Address, DateOfBirth) VALUES 
