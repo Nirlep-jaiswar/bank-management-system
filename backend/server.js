@@ -350,6 +350,8 @@ app.post('/api/transactions', async (req, res) => {
         }
 
         let isLoanRepayment = false;
+        let extraDeposit = 0;
+        let actualRepayment = Amount;
         if (TransactionType === 'Loan Repayment') {
             const [loans] = await conn.query('SELECT LoanID, PrincipalAmount, Status FROM Loans WHERE LoanID = ? AND Status = \'Approved\'', [TargetAccountID]);
             if (loans.length === 0) {
@@ -357,8 +359,8 @@ app.post('/api/transactions', async (req, res) => {
                  return res.status(404).json({ error: 'Active loan not found. Please check Loan ID.' });
             }
             if (loans[0].PrincipalAmount < Amount) {
-                 await conn.rollback();
-                 return res.status(400).json({ error: `Cannot overpay. Remaining loan principal is $${loans[0].PrincipalAmount}` });
+                 actualRepayment = loans[0].PrincipalAmount;
+                 extraDeposit = Amount - actualRepayment;
             }
             isLoanRepayment = true;
         }
@@ -380,7 +382,7 @@ app.post('/api/transactions', async (req, res) => {
 
         const [result] = await conn.query(
             'INSERT INTO Transactions (AccountID, TransactionType, Amount, Description) VALUES (?, ?, ?, ?)',
-            [AccountID, TransactionType, Amount, targetExists ? `Transfer to ACCT-${TargetAccountID}` : isLoanRepayment ? `Repayment for Loan #${TargetAccountID}` : Description]
+            [AccountID, TransactionType, isLoanRepayment ? actualRepayment : Amount, targetExists ? `Transfer to ACCT-${TargetAccountID}` : isLoanRepayment ? `Repayment for Loan #${TargetAccountID}` : Description]
         );
         
         // Update balance
@@ -391,8 +393,16 @@ app.post('/api/transactions', async (req, res) => {
         }
         
         if (isLoanRepayment) {
-            await conn.query('UPDATE Loans SET PrincipalAmount = PrincipalAmount - ? WHERE LoanID = ?', [Amount, TargetAccountID]);
+            await conn.query('UPDATE Loans SET PrincipalAmount = PrincipalAmount - ? WHERE LoanID = ?', [actualRepayment, TargetAccountID]);
             await conn.query('UPDATE Loans SET Status = \'Closed\' WHERE LoanID = ? AND PrincipalAmount <= 0', [TargetAccountID]);
+            
+            if (extraDeposit > 0) {
+                 await conn.query('UPDATE Accounts SET Balance = Balance + ? WHERE AccountID = ?', [extraDeposit, AccountID]);
+                 await conn.query(
+                     'INSERT INTO Transactions (AccountID, TransactionType, Amount, Description) VALUES (?, ?, ?, ?)',
+                     [AccountID, 'Deposit', extraDeposit, `Overpayment Refund for Loan #${TargetAccountID}`]
+                 );
+            }
         }
         
         // Process target receiver if it's a Transfer
