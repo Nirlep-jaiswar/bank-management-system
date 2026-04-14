@@ -1,6 +1,8 @@
 -- Bank Management System Database Setup
 
 -- Drop existing tables to ensure a clean slate
+DROP TABLE IF EXISTS AdminAuditLogs;
+DROP TABLE IF EXISTS Admins;
 DROP TABLE IF EXISTS Transactions;
 DROP TABLE IF EXISTS Loans;
 DROP TABLE IF EXISTS Accounts;
@@ -69,9 +71,9 @@ INSERT INTO Branches (BranchName, Location, Contact) VALUES
 ('Main Branch', '123 Wall Street', '123-456-7890'),
 ('Downtown Branch', '456 Market St', '123-456-7891');
 
-CREATE TABLE IF NOT EXISTS Admins ( AdminID INT AUTO_INCREMENT PRIMARY KEY, FirstName VARCHAR(100) NOT NULL, LastName VARCHAR(100) NOT NULL, Email VARCHAR(100) UNIQUE NOT NULL, Password VARCHAR(100) NOT NULL, AssignedBranch INT, Role ENUM('Teller', 'Super Admin') DEFAULT 'Teller', AllocatedFunds DECIMAL(15,2) DEFAULT 0.00 );
-CREATE TABLE IF NOT EXISTS AdminAuditLogs ( LogID INT AUTO_INCREMENT PRIMARY KEY, AdminID INT, ActionType VARCHAR(100) NOT NULL, Description TEXT, Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (AdminID) REFERENCES Admins(AdminID) );
-INSERT IGNORE INTO Admins (FirstName, LastName, Email, Password, Role) VALUES 
+CREATE TABLE Admins ( AdminID INT AUTO_INCREMENT PRIMARY KEY, FirstName VARCHAR(100) NOT NULL, LastName VARCHAR(100) NOT NULL, Email VARCHAR(100) UNIQUE NOT NULL, Password VARCHAR(100) NOT NULL, AssignedBranch INT, Role ENUM('Teller', 'Super Admin') DEFAULT 'Teller', AllocatedFunds DECIMAL(15,2) DEFAULT 0.00 );
+CREATE TABLE AdminAuditLogs ( LogID INT AUTO_INCREMENT PRIMARY KEY, AdminID INT, ActionType VARCHAR(100) NOT NULL, Description TEXT, Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (AdminID) REFERENCES Admins(AdminID) );
+INSERT INTO Admins (FirstName, LastName, Email, Password, Role) VALUES 
 ('Nirlep', 'Jaiswar', 'nirlep@nexusbank.com', 'admin123', 'Super Admin'),
 ('Tanay', 'Tiwari', 'tanay@nexusbank.com', 'password123', 'Teller'),
 ('Durgesh', 'Nandan', 'durgesh@nexusbank.com', 'password123', 'Teller'),
