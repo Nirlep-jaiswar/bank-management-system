@@ -10,6 +10,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Root endpoint just to verify the backend is alive
+app.get('/', (req, res) => {
+    res.send('NexusBank API is running securely!');
+});
+
 // Create connection pool
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
