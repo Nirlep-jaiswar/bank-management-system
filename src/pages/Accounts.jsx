@@ -12,7 +12,7 @@ export default function Accounts() {
 
   const fetchAccounts = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/accounts');
+      const res = await axios.get(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/accounts`);
       setAccounts(res.data);
     } catch (error) {
       console.error(error);
@@ -23,7 +23,7 @@ export default function Accounts() {
 
   const fetchCustomers = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/customers');
+      const res = await axios.get(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/customers`);
       setCustomers(res.data);
       if (res.data.length > 0) {
         setFormData(prev => ({ ...prev, CustomerID: res.data[0].CustomerID }));
@@ -41,7 +41,7 @@ export default function Accounts() {
   const handleAddAccount = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/accounts', {
+      await axios.post(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/accounts`, {
          CustomerID: formData.CustomerID,
          AccountType: formData.AccountType,
          Balance: parseFloat(formData.Balance) || 0

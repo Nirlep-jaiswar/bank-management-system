@@ -20,8 +20,8 @@ export default function SuperAdmin() {
   const fetchData = async () => {
     try {
       const [adminsRes, logsRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/superadmin/admins?t=${new Date().getTime()}`),
-        axios.get(`http://localhost:5000/api/superadmin/logs?t=${new Date().getTime()}`)
+        axios.get(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/superadmin/admins?t=${new Date().getTime()}`),
+        axios.get(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/superadmin/logs?t=${new Date().getTime()}`)
       ]);
       const normalAdmins = adminsRes.data.filter(a => a.Role !== 'Super Admin');
       setAdmins(normalAdmins);
@@ -44,7 +44,7 @@ export default function SuperAdmin() {
     if (!targetAdminID || !allocateForm.Amount) return alert('Please enter Amount');
     
     try {
-      await axios.post('http://localhost:5000/api/superadmin/allocate', {
+      await axios.post(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/superadmin/allocate`, {
         SuperAdminID: superAdmin.AdminID,
         TargetAdminID: parseInt(targetAdminID),
         Amount: parseFloat(allocateForm.Amount)

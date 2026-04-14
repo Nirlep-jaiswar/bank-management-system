@@ -24,8 +24,8 @@ export default function Loans() {
   const fetchData = async () => {
     try {
       const [loansRes, custRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/loans'),
-        axios.get('http://localhost:5000/api/customers')
+        axios.get(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/loans`),
+        axios.get(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/customers`)
       ]);
       setLoans(loansRes.data);
       setCustomers(custRes.data);
@@ -40,7 +40,7 @@ export default function Loans() {
     try {
       const adminData = localStorage.getItem('adminData');
       const adminObj = adminData ? JSON.parse(adminData) : null;
-      await axios.put(`http://localhost:5000/api/loans/${id}/status`, { 
+      await axios.put(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/loans/${id}/status`, { 
           status: newStatus,
           adminId: adminObj ? adminObj.AdminID : null
       });
@@ -54,7 +54,7 @@ export default function Loans() {
     try {
       const adminData = localStorage.getItem('adminData');
       const adminObj = adminData ? JSON.parse(adminData) : null;
-      await axios.post(`http://localhost:5000/api/loans/${id}/add-interest`, { 
+      await axios.post(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/loans/${id}/add-interest`, { 
           adminId: adminObj ? adminObj.AdminID : null
       });
       fetchData();
@@ -67,7 +67,7 @@ export default function Loans() {
     e.preventDefault();
     if (!newLoan.CustomerID || !newLoan.PrincipalAmount) return alert('Missing required fields');
     try {
-      await axios.post('http://localhost:5000/api/loans', newLoan);
+      await axios.post(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/loans`, newLoan);
       setNewLoan({ CustomerID: '', LoanType: 'Personal', PrincipalAmount: '', InterestRate: '', DurationMonths: '' });
       setShowAddForm(false);
       fetchData();

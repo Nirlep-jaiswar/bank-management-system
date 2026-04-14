@@ -17,7 +17,7 @@ export default function Dashboard() {
 
   const fetchTransactions = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/transactions');
+      const res = await axios.get(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/transactions`);
       setRecentTransactions(res.data.slice(0, 5));
     } catch (err) {
       console.error(err);
@@ -27,7 +27,7 @@ export default function Dashboard() {
   const fetchAdminProfile = async () => {
     if(!adminObj.AdminID) return;
     try {
-      const res = await axios.get(`http://localhost:5000/api/admin?id=${adminObj.AdminID}&t=${new Date().getTime()}`);
+      const res = await axios.get(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin?id=${adminObj.AdminID}&t=${new Date().getTime()}`);
       setAdminProfile(res.data);
       // Update local storage to keep it in sync across reloads
       localStorage.setItem('adminData', JSON.stringify({ ...adminObj, ...res.data }));
@@ -38,7 +38,7 @@ export default function Dashboard() {
 
   const fetchLoans = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/loans');
+      const res = await axios.get(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/loans`);
       setRecentLoans(res.data.slice(0, 5));
     } catch (err) {
       console.error(err);
@@ -62,7 +62,7 @@ export default function Dashboard() {
   const handleTransfer = async () => {
     if(!transferData.accountId || !transferData.amount) return;
     try {
-       await axios.post('http://localhost:5000/api/transactions', {
+       await axios.post(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/transactions`, {
           AccountID: transferData.accountId,
           TargetAccountID: (transferData.type === 'Transfer' || transferData.type === 'Loan Repayment') ? transferData.targetAccountId : undefined,
           CustomerName: transferData.customerName,
@@ -85,7 +85,7 @@ export default function Dashboard() {
     if (!amountToReturn || isNaN(amountToReturn) || parseFloat(amountToReturn) <= 0) return;
     
     try {
-       const res = await axios.post('http://localhost:5000/api/admin/return', {
+       const res = await axios.post(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin/return`, {
            AdminID: adminObj.AdminID,
            Amount: parseFloat(amountToReturn)
        });

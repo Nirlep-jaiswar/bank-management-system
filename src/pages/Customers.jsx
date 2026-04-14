@@ -13,7 +13,7 @@ export default function Customers() {
 
   const fetchCustomers = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/customers');
+      const res = await axios.get(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/customers`);
       setCustomers(res.data);
     } catch (error) {
       console.error(error);
@@ -29,7 +29,7 @@ export default function Customers() {
   const handleAddCustomer = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/customers', formData);
+      await axios.post(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/customers`, formData);
       setIsModalOpen(false);
       setFormData({ FirstName: '', LastName: '', Email: '', Phone: '', Address: '', DateOfBirth: '' });
       fetchCustomers();
@@ -42,7 +42,7 @@ export default function Customers() {
   const handleDeleteCustomer = async (id) => {
     if (!window.confirm('Are you sure you want to permanently delete this customer and all their associated accounts and transactions?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/customers/${id}`);
+      await axios.delete(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/customers/${id}`);
       fetchCustomers();
     } catch (error) {
       console.error(error);
