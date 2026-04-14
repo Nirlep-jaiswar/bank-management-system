@@ -11,7 +11,7 @@ export default function Settings() {
 
   useEffect(() => {
     if(!adminObj.AdminID) return;
-    axios.get(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin?id=${adminObj.AdminID}`)
+    axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin?id=${adminObj.AdminID}`)
       .then(res => setAdminData(res.data))
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -19,7 +19,7 @@ export default function Settings() {
 
   const handleSave = async () => {
     try {
-        await axios.put(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin`, adminData);
+        await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin`, adminData);
         alert('Settings saved successfully!');
     } catch(err) {
         alert('Error saving settings.');

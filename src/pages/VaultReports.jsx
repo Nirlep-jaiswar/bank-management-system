@@ -15,8 +15,8 @@ export default function VaultReports() {
   const fetchData = async () => {
     try {
       const [adminsRes, logsRes] = await Promise.all([
-        axios.get(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/superadmin/admins`),
-        axios.get(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/superadmin/logs`)
+        axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/superadmin/admins`),
+        axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/superadmin/logs`)
       ]);
       const normalAdmins = adminsRes.data.filter(a => a.Role !== 'Super Admin');
       setAdmins(normalAdmins);

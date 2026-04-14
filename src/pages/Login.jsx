@@ -15,7 +15,7 @@ export default function Login() {
     setLoading(true);
     setError('');
     try {
-      const res = await axios.post(`\${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/login`, formData);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/login`, formData);
       if(res.data.success) {
         localStorage.setItem('adminAuth', 'true');
         localStorage.setItem('adminData', JSON.stringify(res.data.admin)); // Save full admin profile
