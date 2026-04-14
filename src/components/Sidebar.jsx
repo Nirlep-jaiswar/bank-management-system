@@ -31,23 +31,24 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="w-64 border-r border-slate-800 p-6 flex flex-col h-full bg-slate-900/40 backdrop-blur-xl z-20 shadow-2xl">
-      <div className="flex items-center gap-3 mb-10 text-primary cursor-pointer hover:opacity-80 transition-opacity">
-        <div className="bg-primary/20 p-2 rounded-xl border border-primary/20 shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+    <aside className="w-20 md:w-64 border-r border-slate-800 py-6 px-2 md:p-6 flex flex-col h-full bg-slate-900/40 backdrop-blur-xl z-20 shadow-2xl flex-shrink-0 transition-all duration-300">
+      <div className="flex items-center justify-center md:justify-start gap-3 mb-10 text-primary cursor-pointer hover:opacity-80 transition-opacity">
+        <div className="bg-primary/20 p-2 border border-primary/20 shadow-[0_0_15px_rgba(59,130,246,0.3)] md:rounded-xl rounded-full">
           <Landmark className="w-7 h-7 text-primary" />
         </div>
-        <div>
+        <div className="hidden md:block whitespace-nowrap">
           <h1 className="text-xl font-bold tracking-tight text-white leading-tight">NexusBank</h1>
           <p className="text-xs text-primary/80 font-medium font-mono uppercase tracking-widest mt-1">Admin</p>
         </div>
       </div>
       
-      <nav className="flex-1 space-y-3">
+      <nav className="flex-1 space-y-3 overflow-y-auto no-scrollbar pb-4">
         {navItems.map((item, i) => (
           <NavLink 
             key={i} 
             to={item.path}
-            className={({isActive}) => `flex items-center gap-4 p-3 rounded-xl transition-all duration-300 relative group ${isActive ? 'text-white bg-slate-800/80 shadow-lg border border-slate-700/50' : 'text-slate-400 hover:text-white hover:bg-slate-800/40'}`}
+            title={item.label}
+            className={({isActive}) => `flex items-center justify-center md:justify-start gap-4 p-3 md:rounded-xl rounded-full transition-all duration-300 relative group ${isActive ? 'text-white bg-slate-800/80 shadow-lg border border-slate-700/50' : 'text-slate-400 hover:text-white hover:bg-slate-800/40'}`}
           >
             {({isActive}) => (
               <>
@@ -57,7 +58,7 @@ export default function Sidebar() {
                 <div className={`${isActive ? 'text-primary' : 'text-slate-500 group-hover:text-primary transition-colors'}`}>
                   {item.icon}
                 </div>
-                <span className={`font-medium ${isActive ? 'tracking-wide' : ''} transition-all`}>{item.label}</span>
+                <span className={`hidden md:block font-medium ${isActive ? 'tracking-wide' : ''} transition-all whitespace-nowrap`}>{item.label}</span>
               </>
             )}
           </NavLink>
@@ -65,9 +66,9 @@ export default function Sidebar() {
       </nav>
 
       <div className="mt-8 border-t border-slate-800 pt-6">
-        <button onClick={handleLogout} className="flex w-full items-center gap-4 p-3 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-colors font-medium">
+        <button onClick={handleLogout} title="Logout" className="flex w-full items-center justify-center md:justify-start gap-4 p-3 text-slate-500 hover:text-red-400 hover:bg-red-400/10 md:rounded-xl rounded-full transition-colors font-medium">
           <LogOut size={20} />
-          <span>Logout</span>
+          <span className="hidden md:block whitespace-nowrap">Logout</span>
         </button>
       </div>
     </aside>
